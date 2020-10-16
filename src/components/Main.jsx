@@ -59,12 +59,22 @@ const StyledMicOff = styled(MicOff)`
   }
 `
 
-const handleStopRecording = async ({ recorder, setRecorder, setError }) => {
+const handleStopRecording = async ({
+  recorder,
+  setRecorder,
+  setError,
+  stream,
+  setStream,
+}) => {
   try {
     const blob = await recorder.getBlob()
     saveAs(blob, getFilename())
+
     recorder.destroy()
     setRecorder(null)
+
+    stream.getTracks().forEach((track) => track.stop())
+    setStream(null)
   } catch (error) {
     setError(error)
   }
@@ -110,6 +120,8 @@ const handleRecord = async ({
   setRecorder,
   isStreamActive,
   setError,
+  stream,
+  setStream,
 }) => {
   try {
     if (!isRecording && recorder && isStreamActive) {
@@ -121,7 +133,13 @@ const handleRecord = async ({
     setIsRecording(false)
     if (recorder) {
       recorder.stopRecording(() => {
-        handleStopRecording({ recorder, setRecorder, setError })
+        handleStopRecording({
+          recorder,
+          setRecorder,
+          setError,
+          stream,
+          setStream,
+        })
       })
     }
   } catch (error) {
@@ -161,6 +179,8 @@ function Main() {
         setRecorder,
         isStreamActive,
         setError,
+        stream,
+        setStream,
       })
     }
   }, [
@@ -169,6 +189,7 @@ function Main() {
     recorder,
     recorderState,
     isStreamActive,
+    stream,
   ])
 
   const handleSubmit = (evt) => {
@@ -194,6 +215,8 @@ function Main() {
       setRecorder,
       isStreamActive,
       setError,
+      stream,
+      setStream,
     })
   }
 
