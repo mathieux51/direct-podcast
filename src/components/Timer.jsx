@@ -18,7 +18,7 @@ function toHHMMSS(seconds) {
 const Counter = () => {
   const [count, setCount] = React.useState(0)
 
-  const requestRef = React.useRef()
+  const requestRef = React.useRef(null)
   const previousTimeRef = React.useRef(null)
 
   const animate = React.useCallback((time) => {
