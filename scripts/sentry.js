@@ -17,6 +17,7 @@ async function main() {
     await cli.releases.finalize(release)
   } catch (error) {
     console.error('Source maps uploading failed:', error)
+    process.exit(1)
   }
 }
 
