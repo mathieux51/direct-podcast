@@ -4,14 +4,7 @@
 // It also reports on the fraction of samples this were at or near
 // the top of the measurement range.
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-const source = audioCtx.createMediaStreamSource(stream)
-const analyser = audioCtx.createAnalyser()
-
-source.connect(analyser)
-analyser.connect(audioCtx.destination)
-const bufferLengthAlt = analyser.frequencyBinCount
-const dataArrayAlt = new Uint8Array(bufferLengthAlt)
+//
 // const drawAlt = () => {
 //         drawVisual = requestAnimationFrame(drawAlt);
 //
@@ -34,7 +27,7 @@ const dataArrayAlt = new Uint8Array(bufferLengthAlt)
 //         }
 //       };
 
-let drawVisual = requestAnimationFrame(drawAlt)
+const drawVisual = requestAnimationFrame(drawAlt)
 
 // on stop
 window.cancelAnimationFrame(drawVisual)

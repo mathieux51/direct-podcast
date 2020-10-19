@@ -2,10 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import RecordRTC from 'recordrtc'
 import { saveAs } from 'file-saver'
-import Mic from './Mic'
-import MicOff from './MicOff'
 import Timer from './Timer'
 import Footer from './Footer'
+import Mic from './Mic'
+import MicOffSVG from './MicOffSVG'
 import usePrevious from '../hooks/usePrevious'
 // import elementInvisible from "../style/elementInvisible"
 
@@ -47,13 +47,7 @@ const StyledFooter = styled(Footer)`
   height: 20%;
 `
 
-const StyledMic = styled(Mic)`
-  & path {
-    fill: ${(props) => props.theme.red};
-  }
-`
-
-const StyledMicOff = styled(MicOff)`
+const StyledMicOff = styled(MicOffSVG)`
   & path {
     fill: ${(props) => props.theme.white};
   }
@@ -228,7 +222,7 @@ function Main() {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Button type='submit' aria-label='enregistrer'>
-          {isRecording ? <StyledMic /> : <StyledMicOff />}
+          {isRecording ? <Mic stream={stream} /> : <StyledMicOff />}
         </Button>
         <Timer isRecording={isRecording} />
       </Form>

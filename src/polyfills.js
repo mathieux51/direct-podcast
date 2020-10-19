@@ -14,7 +14,10 @@ if (navigator.mediaDevices.getUserMedia === undefined) {
   navigator.mediaDevices.getUserMedia = function (constraints) {
     // First get ahold of the legacy getUserMedia, if present
     const getUserMedia =
-      navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+      navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia ||
+      navigator.msGetUserMedia
 
     // Some browsers just don't implement it - return a rejected promise with an error
     // to keep a consistent interface
