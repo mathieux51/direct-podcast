@@ -1,42 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import MicSVG from './MicSVG'
-
-const StyledMic = styled(MicSVG)`
-  & path {
-    fill: ${(props) => props.theme.red};
-  }
-`
-
-const Text = styled.span`
-  color: ${(props) => props.theme.white};
-  font-size: 24px;
-  font-family: 'Antipasto', sans-serif;
-  text-decoration: none;
-`
-
-
-// const useAnimationFrame = (callback) => {
-//   const requestRef = React.useRef()
-//   const previousTimeRef = React.useRef()
-//
-//   const animate = React.useCallback(
-//     (time) => {
-//       if (previousTimeRef.current !== undefined) {
-//         const deltaTime = time - previousTimeRef.current
-//         callback(deltaTime)
-//       }
-//       previousTimeRef.current = time
-//       requestRef.current = requestAnimationFrame(animate)
-//     },
-//     [callback]
-//   )
-//
-//   React.useEffect(() => {
-//     requestRef.current = requestAnimationFrame(animate)
-//     return () => cancelAnimationFrame(requestRef.current)
-//   }, [animate])
-// }
+import MicSVGVolume from './MicSVGVolume'
 
 class Mic extends React.PureComponent {
   constructor() {
@@ -50,15 +13,12 @@ class Mic extends React.PureComponent {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
     this.source = audioCtx.createMediaStreamSource(stream)
     this.analyser = audioCtx.createAnalyser()
-    // this.analyser.minDecibels = -60
-    // this.analyser.maxDecibels = 6
     this.analyser.fftSize = 32
-    // analyser.minDecibels = -90;
-    // analyser.maxDecibels = -10;
-    this.analyser.smoothingTimeConstant = 0.85
+    this.analyser.minDecibels = -90;
+    // this.analyser.maxDecibels = -10;
+    // this.analyser.smoothingTimeConstant = 0.85
 
     this.source.connect(this.analyser)
-    // this.analyser.connect(audioCtx.destination)
 
     this.visualize()
   }
@@ -71,22 +31,23 @@ class Mic extends React.PureComponent {
 
   visualize = () => {
     const bufferLength = this.analyser.frequencyBinCount
-    // const dataArray = new Uint8Array(bufferLength)
-    const dataArray = new Float32Array(bufferLength)
+    const dataArray = new Uint8Array(bufferLength)
+    // const dataArray = new Float32Array(bufferLength)
 
     const draw = () => {
       this.drawVisual = requestAnimationFrame(draw)
 
-      // this.analyser.getByteFrequencyData(dataArray)
-      this.analyser.getFloatTimeDomainData(dataArray)
+      this.analyser.getByteFrequencyData(dataArray)
 
       let sum = 0.0
       // eslint-disable-next-line
       for (let i = 0; i < bufferLength; i++) {
-        sum += dataArray[i] * dataArray[i]
+        // sum += dataArray[i] * dataArray[i]
+        sum += dataArray[i]
       }
-      this.instant = Math.sqrt(sum / bufferLength)
-      this.setState({ instant: Math.floor(this.instant * 1000) / 1000 })
+      // this.instant = Math.sqrt(sum / bufferLength)
+      this.instant = sum / bufferLength
+      this.setState({ instant: Math.floor(this.instant) })
     }
 
     draw()
@@ -94,12 +55,8 @@ class Mic extends React.PureComponent {
 
   render() {
     const { instant } = this.state
-    return (
-      <div>
-        <Text>{instant} dB</Text>
-        <StyledMic />
-      </div>
-    )
+    const { className } = this.props
+    return <MicSVGVolume instant={instant} className={className} />
   }
 }
 

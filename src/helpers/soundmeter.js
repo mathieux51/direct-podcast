@@ -27,12 +27,12 @@
 //         }
 //       };
 
-const drawVisual = requestAnimationFrame(drawAlt)
+// const drawVisual = requestAnimationFrame(drawAlt)
 
 // on stop
-window.cancelAnimationFrame(drawVisual)
+// window.cancelAnimationFrame(drawVisual)
 
-analyser.getByteFrequencyData(dataArrayAlt)
+// analyser.getByteFrequencyData(dataArrayAlt)
 
 // export default class SoundMeter {
 //   constructor() {

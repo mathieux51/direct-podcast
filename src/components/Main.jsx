@@ -48,9 +48,17 @@ const StyledFooter = styled(Footer)`
 `
 
 const StyledMicOff = styled(MicOffSVG)`
-  & path {
-    fill: ${(props) => props.theme.white};
-  }
+  height: 192px;
+  width: 192px;
+  fill: ${(props) => props.theme.white};
+`
+
+const StyledMic = styled(Mic)`
+  height: 192px;
+  width: 192px;
+`
+const StyledTimer = styled(Timer)`
+  margin-top: 1rem;
 `
 
 const handleStopRecording = async ({
@@ -222,9 +230,9 @@ function Main() {
     <Container>
       <Form onSubmit={handleSubmit}>
         <Button type='submit' aria-label='enregistrer'>
-          {isRecording ? <Mic stream={stream} /> : <StyledMicOff />}
+          {isRecording ? <StyledMic stream={stream} /> : <StyledMicOff />}
         </Button>
-        <Timer isRecording={isRecording} />
+        <StyledTimer isRecording={isRecording} />
       </Form>
       <StyledFooter />
     </Container>

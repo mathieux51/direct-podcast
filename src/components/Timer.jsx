@@ -15,7 +15,7 @@ function toHHMMSS(seconds) {
   return [hours, minutes, seconds % 60].map(format).join(':')
 }
 
-const Counter = () => {
+const Counter = ({ className }) => {
   const [count, setCount] = React.useState(0)
 
   const requestRef = React.useRef(null)
@@ -36,10 +36,18 @@ const Counter = () => {
     return () => cancelAnimationFrame(requestRef.current)
   }, [animate])
 
-  return <CounterText>{toHHMMSS(Math.round(count))}</CounterText>
+  return (
+    <CounterText className={className}>
+      {toHHMMSS(Math.round(count))}
+    </CounterText>
+  )
 }
 
-const Timer = ({ isRecording }) =>
-  isRecording ? <Counter /> : <CounterText>00:00:00</CounterText>
+const Timer = ({ isRecording, className }) =>
+  isRecording ? (
+    <Counter className={className} />
+  ) : (
+    <CounterText className={className}>00:00:00</CounterText>
+  )
 
 export default Timer
