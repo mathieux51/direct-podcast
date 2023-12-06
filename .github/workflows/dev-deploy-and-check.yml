@@ -1,10 +1,10 @@
-name: deploy to production
+name: deploy and check Lighthouse
 on:
   push:
     branches:
-      - master
+      - dev
 jobs:
-  deploy:
+  deploy-and-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -23,3 +23,17 @@ jobs:
           RECAPTCHA_CLIENT_SIDE: ${{ secrets.RECAPTCHA_CLIENT_SIDE }}
           RECAPTCHA_SERVER_SIDE: ${{ secrets.RECAPTCHA_SERVER_SIDE }}
         run: npm run deploy
+      - name: Run Lighthouse
+        uses: foo-software/lighthouse-check-action@master
+        id: lighthouseCheck
+        with:
+          urls: 'https://dev.directpodcast.fr'
+      - name: Handle Lighthouse Check results
+        uses: foo-software/lighthouse-check-status-action@master
+        with:
+          lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+          minAccessibilityScore: "100"
+          minBestPracticesScore: "100"
+          minPerformanceScore: "100"
+          minProgressiveWebAppScore: "100"
+          minSeoScore: "100"
