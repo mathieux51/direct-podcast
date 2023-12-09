@@ -35,11 +35,24 @@
     "url": "https://github.com/mathieux51/direct-podcast/issues"
   },
   "devDependencies": {
+    "@types/node": "^20.10.4",
     "@types/react": "^18.2.42",
-    "next": "^14.0.3"
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-next": "^14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "next": "^14.0.3",
+    "typescript": "5.3.3"
   },
   "dependencies": {
+    "@sentry/browser": "^7.86.0",
     "react": "^18.2.0",
-    "styled-components": "^6.1.1"
+    "styled-components": "^6.1.1",
+    "webrtc-adapter": "^8.2.3"
   }
 }

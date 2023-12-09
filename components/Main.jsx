@@ -163,13 +163,7 @@ function Main() {
         setError,
       })
     }
-  }, [
-    isRecording,
-    prevRecorderState,
-    recorder,
-    recorderState,
-    isStreamActive,
-  ])
+  }, [isRecording, prevRecorderState, recorder, recorderState, isStreamActive])
 
   const handleSubmit = (evt) => {
     evt.preventDefault()

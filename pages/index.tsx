@@ -1,39 +1,40 @@
 import React from 'react'
-import Head from 'next/head'
-// import { useRouter } from 'next/dist/client/router'
-import { NextPageContext } from 'next'
+import polyfills from '../helpers/polyfills'
+import * as Sentry from '@sentry/browser'
+import adapter from 'webrtc-adapter'
+import App from '../components/App'
+import * as serviceWorker from '../helpers/serviceWorker'
+import packageJSON from '../package.json'
 
-function Index() {
-  // const router = useRouter()
-  // React.useEffect(() => {
-  //   router.replace('/en')
-  // })
+if (!(typeof window === 'undefined')) {
+  polyfills()
+  serviceWorker.register({})
 
-  return (
-    <>
-      <Head>
-        <title>308 Permanent Redirect</title>
-        <meta httpEquiv='content-type' content='text/html;charset=utf-8' />
-        {/* <meta name='robots' content='noindex, nofollow' /> */}
-      </Head>
-      <h1>308 Permanent Redirect</h1>
-      The document has moved
-      <a href='/en'>here</a>
-    </>
-  )
-}
-
-Index.getInitialProps = async ({ res }: NextPageContext) => {
-  if (res) {
-    // in case of export res.writeHead is not a function
-    // redirection is done in now.json
-    if (res.writeHead) {
-      res.writeHead(308, { Location: '/en' })
-      res.end()
-    }
+  if (process.env.NODE_ENV !== 'development') {
+    Sentry.init({
+      release: packageJSON.version,
+      dsn: 'https://d1fd979948f14a358a8b2695c5df3abe@o381364.ingest.sentry.io/5208585',
+    })
   }
 
-  return {}
+  Sentry.configureScope((scope) => {
+    scope.setExtra(
+      'adapter.browserDetails.browser',
+      adapter.browserDetails.browser,
+    )
+    scope.setExtra(
+      'adapter.browserDetails.version',
+      adapter.browserDetails.version,
+    )
+  })
+}
+
+function Index() {
+  return (
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  )
 }
 
 export default Index
