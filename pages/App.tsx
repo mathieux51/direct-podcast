@@ -2,9 +2,9 @@ import React from 'react'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { normalize } from 'polished'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
-import theme from './theme'
-import Main from './components/Main'
-import ErrorBoundary from './components/ErrorBoundary'
+import theme from '../styles/theme'
+import Main from '../components/Main'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 const GlobalStyle = createGlobalStyle`
   ${normalize()}

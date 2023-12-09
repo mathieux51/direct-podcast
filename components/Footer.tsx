@@ -6,7 +6,7 @@ import Help from './Help'
 import Mail from './Mail'
 import Tooltip from './Tooltip'
 import useClickOutside from '../hooks/useClickOutside'
-import packageJSON from '../../package.json'
+import packageJSON from '../package.json'
 
 const Container = styled.div`
   display: flex;

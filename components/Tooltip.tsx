@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import elementInvisible from '../style/elementInvisible'
+import elementInvisible from '../styles/elementInvisible'
 
 const Right = styled.span`
   width: 70vw;

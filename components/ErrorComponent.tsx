@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Footer from './Footer'
-import media from '../media'
+import media from '../styles/media'
 
 const Container = styled.div`
   display: flex;
@@ -21,18 +21,18 @@ const SubContainer = styled.div`
 
 const TextContainer = styled.div`
   width: 60vw;
-  ${media.down('md')} {
+  ${media.medium`
     width: 90vw;
-  }
+  `}
   max-width: 960px;
   position: relative;
 `
 
 const Text = styled.span`
   color: ${(props) => props.theme.white};
-  ${media.down('md')} {
+  ${media.medium`
     font-size: 20px;
-  }
+  `}
 `
 
 const Button = styled.button`

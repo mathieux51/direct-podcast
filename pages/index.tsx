@@ -2,7 +2,7 @@ import React from 'react'
 import polyfills from '../helpers/polyfills'
 import * as Sentry from '@sentry/browser'
 import adapter from 'webrtc-adapter'
-import App from '../components/App'
+import Main from '../components/Main'
 import * as serviceWorker from '../helpers/serviceWorker'
 import packageJSON from '../package.json'
 
@@ -32,7 +32,7 @@ if (!(typeof window === 'undefined')) {
 function Index() {
   return (
     <React.StrictMode>
-      <App />
+      <Main />
     </React.StrictMode>
   )
 }

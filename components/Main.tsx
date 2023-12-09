@@ -9,7 +9,7 @@ import Footer from './Footer'
 import usePrevious from '../hooks/usePrevious'
 // import elementInvisible from "../style/elementInvisible"
 
-const addZero = (str) => (str.length === 1 ? `0${str}` : str)
+const addZero = (str: string) => (str.length === 1 ? `0${str}` : str)
 
 const getFilename = () => {
   const now = new Date()
