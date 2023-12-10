@@ -1,27 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import RecordRTC from 'recordrtc'
+// import RecordRTC from 'recordrtc'
 import { saveAs } from 'file-saver'
 import Mic from './Mic'
 import MicOff from './MicOff'
 import Timer from './Timer'
 import Footer from './Footer'
 import usePrevious from '../hooks/usePrevious'
-// import elementInvisible from "../style/elementInvisible"
-
-const addZero = (str: string) => (str.length === 1 ? `0${str}` : str)
-
-const getFilename = () => {
-  const now = new Date()
-  const d = addZero(now.getDate().toString())
-  const m = addZero((now.getMonth() + 1).toString())
-  const y = now.getFullYear()
-  const h = addZero(now.getHours().toString())
-  const min = addZero(now.getMinutes().toString())
-  const s = addZero(now.getSeconds().toString())
-
-  return `${d}.${m}.${y}-${h}.${min}.${s}.wav`
-}
+import filename from '../helpers/filename'
+import isServer from '../helpers/isServer'
 
 const Container = styled.div`
   height: 100vh;
@@ -62,7 +49,7 @@ const StyledMicOff = styled(MicOff)`
 const handleStopRecording = async ({ recorder, setRecorder, setError }) => {
   try {
     const blob = await recorder.getBlob()
-    saveAs(blob, getFilename())
+    saveAs(blob, filename())
     recorder.destroy()
     setRecorder(null)
   } catch (error) {
@@ -90,6 +77,7 @@ const handleSetRecorder = async ({
 }) => {
   try {
     if (stream && !recorder) {
+      const RecordRTC = (await import('RecordRTC')).default
       const nextRecorder = RecordRTC(stream.clone(), {
         recorderType: RecordRTC.StereoAudioRecorder,
         mimeType: 'audio/wav',
@@ -141,7 +129,8 @@ function Main() {
   React.useEffect(() => {
     if (
       recorderState !== 'stopped' &&
-      !(recorderState === null && prevRecorderState === 'stopped')
+      !(recorderState === null && prevRecorderState === 'stopped') &&
+      !isServer
     ) {
       handleSetRecorder({
         recorder,

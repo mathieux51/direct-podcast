@@ -20,7 +20,9 @@ const Right = styled.span`
   transition: opacity 0.8s;
 `
 
-const Container = styled.div`
+const Container = styled('div').withConfig({
+  shouldForwardProp: (props) => props !== 'isVisible',
+})<{ isVisible: keyof boolean }>`
   display: inline-block;
   position: relative;
   text-align: left;
@@ -54,11 +56,10 @@ const Tooltip = ({ className, children, isVisible }) => (
   <Container isVisible={isVisible} className={className}>
     {children}
     <Right>
-      <p>
-        Je clique --> J'autorise l'accès à mon micro --> Je parle --> Lorsque
+      <p>{`Je clique --> J'autorise l'accès à mon micro --> Je parle --> Lorsque
         j’ai terminé, je clique une seconde fois pour arrêter mon enregistrement
         --> Le fichier sonore se télécharge automatiquement sur mon appareil.
-      </p>
+      `}</p>
       <I />
     </Right>
   </Container>

@@ -4,9 +4,10 @@ import * as Sentry from '@sentry/browser'
 import adapter from 'webrtc-adapter'
 import Main from '../components/Main'
 import * as serviceWorker from '../helpers/serviceWorker'
+import isServer from '../helpers/isServer'
 import packageJSON from '../package.json'
 
-if (!(typeof window === 'undefined')) {
+if (!isServer) {
   polyfills()
   serviceWorker.register({})
 

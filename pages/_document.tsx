@@ -1,11 +1,12 @@
 import React from 'react'
 import Document, {
   Html,
-  Head,
   Main,
+  Head,
   NextScript,
   DocumentContext,
 } from 'next/document'
+
 import { ServerStyleSheet } from 'styled-components'
 
 type Props = {}
@@ -83,7 +84,6 @@ class MyDocument extends Document<Props> {
               href='https://fonts.googleapis.com/css?family=Roboto&display=swap'
             />
           </noscript>
-          <meta name='viewport' content='width=device-width, initial-scale=1' />
           <link
             rel='apple-touch-icon'
             sizes='180x180'
@@ -105,7 +105,6 @@ class MyDocument extends Document<Props> {
           <link rel='mask-icon' href='/safari-pinned-tab.svg' color='#005064' />
           <meta name='msapplication-TileColor' content='#005064' />
           <meta name='theme-color' content='#005064' />
-          <title>Direct podcast</title>
           <meta
             name='description'
             content="Je clique, j'autorise l'accès à mon micro, je parle et lorsque j’ai terminé, je clique une seconde fois pour arrêter mon enregistrement. Le fichier sonore se télécharge automatiquement."

@@ -109,7 +109,7 @@ const ErrorComponent = ({ className, text, eventID, error, onClick }) => {
           </Title>
           {eventID && (
             <span>
-              <Text>Numéro de l'incident : </Text>
+              <Text>{`Numéro de l'incident : `}</Text>
               <Button onClick={onClick}>
                 <EventID>{eventID}</EventID>
               </Button>
