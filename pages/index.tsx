@@ -1,15 +1,11 @@
 import React from 'react'
-import polyfills from '../helpers/polyfills'
 import * as Sentry from '@sentry/browser'
 import adapter from 'webrtc-adapter'
 import Main from '../components/Main'
-import * as serviceWorker from '../helpers/serviceWorker'
 import isServer from '../helpers/isServer'
 import packageJSON from '../package.json'
 
 if (!isServer) {
-  polyfills()
-  serviceWorker.register({})
 
   if (process.env.NODE_ENV !== 'development') {
     Sentry.init({

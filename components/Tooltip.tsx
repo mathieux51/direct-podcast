@@ -20,9 +20,13 @@ const Right = styled.span`
   transition: opacity 0.8s;
 `
 
+type ContainerProps = {
+  isVisible: boolean
+}
+
 const Container = styled('div').withConfig({
   shouldForwardProp: (props) => props !== 'isVisible',
-})<{ isVisible: keyof boolean }>`
+})<ContainerProps>`
   display: inline-block;
   position: relative;
   text-align: left;
@@ -52,7 +56,13 @@ const I = styled.i`
     box-shadow: 0 1px 8px rgba(0,0,0,0.5);
   `
 
-const Tooltip = ({ className, children, isVisible }) => (
+type Props = {
+  isVisible: boolean
+  className: string
+  children: JSX.Element
+}
+
+const Tooltip: React.FC<Props> = ({ className, children, isVisible }) => (
   <Container isVisible={isVisible} className={className}>
     {children}
     <Right>

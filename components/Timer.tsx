@@ -7,8 +7,8 @@ const CounterText = styled.span`
   font-family: 'Antipasto', sans-serif;
 `
 
-function toHHMMSS(seconds) {
-  const format = (val) => `0${Math.floor(val)}`.slice(-2)
+function toHHMMSS(seconds: number) {
+  const format = (val: number) => `0${Math.floor(val)}`.slice(-2)
   const hours = seconds / 3600
   const minutes = (seconds % 3600) / 60
 
@@ -18,10 +18,10 @@ function toHHMMSS(seconds) {
 const Counter = () => {
   const [count, setCount] = React.useState(0)
 
-  const requestRef = React.useRef()
-  const previousTimeRef = React.useRef(null)
+  const requestRef = React.useRef(0)
+  const previousTimeRef = React.useRef(0)
 
-  const animate = React.useCallback((time) => {
+  const animate = React.useCallback((time: number) => {
     if (previousTimeRef && previousTimeRef.current) {
       const deltaTime = time - previousTimeRef.current
 
@@ -39,7 +39,11 @@ const Counter = () => {
   return <CounterText>{toHHMMSS(Math.round(count))}</CounterText>
 }
 
-const Timer = ({ isRecording }) =>
+type Props = {
+  isRecording: boolean
+}
+
+const Timer: React.FC<Props> = ({ isRecording }) =>
   isRecording ? <Counter /> : <CounterText>00:00:00</CounterText>
 
 export default Timer

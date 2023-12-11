@@ -1,12 +1,12 @@
 import { EnvError } from '../helpers/errors'
 
-interface Env {
-  reCaptchaKey: string | undefined
+type Env = {
+  reCaptchaKey: string
 }
 
 const getEnv = (): Env => {
   const env = {
-    reCaptchaKey: process.env.REACT_APP_RECAPTCHA_CLIENT_SIDE
+    reCaptchaKey: process.env.REACT_APP_RECAPTCHA_CLIENT_SIDE!
   }
   for (const [key, value] of Object.entries(env)) {
     if (value === undefined) {
@@ -16,4 +16,4 @@ const getEnv = (): Env => {
   return env
 }
 
-export default getEnv
+export default getEnv()
