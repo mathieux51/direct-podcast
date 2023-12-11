@@ -18,7 +18,11 @@ const StyledCreativeCommonIcon = styled(CreativeCommonIcon)`
   height: 15px;
 `
 
-const CommonCreative = ({ className }) => (
+type CommonCreativeProps = {
+  className?: string
+}
+
+const CommonCreative: React.FC<CommonCreativeProps> = ({ className }) => (
   <Container className={className}>
     <A
       rel='license'

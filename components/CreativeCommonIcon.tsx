@@ -1,6 +1,14 @@
 import React from 'react'
 
-const CreativeCommonIcon = ({ className, viewBox = '0 0 80 15' }) => (
+type Props = {
+  className?: string
+  viewBox?: string
+}
+
+const CreativeCommonIcon: React.FC<Props> = ({
+  className,
+  viewBox = '0 0 80 15',
+}) => (
   <svg width='100%' viewBox={viewBox} className={className}>
     <defs>
       <clipPath clipPathUnits='userSpaceOnUse' id='a'>

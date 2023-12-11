@@ -52,13 +52,17 @@ const BottomNote = styled.h1`
   margin: 0;
 `
 
-const Footer = ({ className }) => {
-  const buttonRef = React.createRef()
+type Props = {
+  className?: string
+}
+
+const Footer: React.FC<Props> = ({ className }) => {
+  const buttonRef = React.createRef<HTMLButtonElement>()
   const [isVisible, setIsVisible] = React.useState(false)
-  const handleClick = (evt) => {
-    evt.preventDefault()
-    evt.stopPropagation()
-    if (!isVisible) {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (!isVisible && buttonRef.current) {
       buttonRef.current.focus()
       setIsVisible(true)
       return
@@ -68,7 +72,7 @@ const Footer = ({ className }) => {
 
   useClickOutside(buttonRef, () => setIsVisible(false))
   const [email, setEmail] = React.useState('')
-  const handleOnVerify = React.useCallback((token) => {
+  const handleOnVerify = React.useCallback((token: string) => {
     if (token) {
       setEmail('estceque.asso@gmail.com')
     }

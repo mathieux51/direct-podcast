@@ -95,7 +95,21 @@ const Title = styled.h2`
   flex-direction: column;
 `
 
-const ErrorComponent = ({ className, text, eventID, error, onClick }) => {
+type Props = {
+  className?: string
+  text: string
+  eventID?: string
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  error?: Error
+}
+
+const ErrorComponent: React.FC<Props> = ({
+  className,
+  text,
+  eventID,
+  error,
+  onClick,
+}) => {
   const emojiStyle = { fontSize: 80, paddingLeft: '3rem' }
   return (
     <Container className={className}>

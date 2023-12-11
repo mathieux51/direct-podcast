@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Sentry from '@sentry/browser'
 import UAParser from 'ua-parser-js'
-import GetUserMediaError from '../helpers/errors'
+import { GetUserMediaError } from '../helpers/errors'
 import ErrorComponent from './ErrorComponent'
 
 function inIframe() {
@@ -12,7 +12,15 @@ function inIframe() {
   }
 }
 
-function getUserMediaErrorText({ name, version, os }) {
+function getUserMediaErrorText({
+  name,
+  version,
+  os,
+}: {
+  name?: string
+  version?: string
+  os?: string
+}) {
   if (os === 'iOS' && name !== 'Mobile Safari') {
     return `Désolé ! Le navigateur ${name} (v${version}) n'est pas supporté par directpodcast.fr. Sur iOS il est recommandé d'utiliser "Mobile Safari"`
   }
@@ -22,13 +30,28 @@ function getUserMediaErrorText({ name, version, os }) {
   return "Désolé ! Ce navigateur n'est pas supporté par directpodcast.fr."
 }
 
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { error: null, errorInfo: null, eventID: '', component: null }
+type Props = {
+  children?: React.ReactNode
+}
+
+type State = {
+  error: Error
+  digest?: string | null
+  componentStack?: string | null
+  eventID: string
+  component: React.ReactElement | null
+}
+
+class ErrorBoundary extends React.Component<Props, State> {
+  state: State = {
+    error: new Error(),
+    digest: null,
+    componentStack: null,
+    eventID: '',
+    component: null,
   }
 
-  componentDidCatch(error, errorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (inIframe()) {
       this.setState({
         component: (
@@ -73,27 +96,30 @@ class ErrorBoundary extends React.Component {
     Sentry.withScope((scope) => {
       scope.setExtra('error.message', error.message)
       scope.setExtra('error.name', error.name)
-      scope.setExtra('errorInfo', errorInfo)
+      scope.setExtra('digest', errorInfo.digest)
+      scope.setExtra('componentStack', errorInfo.componentStack)
+
       const eventID = Sentry.captureException(error)
       this.setState({
         error,
-        errorInfo,
+        digest: errorInfo.digest,
+        componentStack: errorInfo.componentStack,
         eventID,
       })
     })
   }
 
-  handleClick = async (evt) => {
-    evt.preventDefault()
-    evt.stopPropagation()
+  handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
     const { eventID } = this.state
     await navigator.clipboard.writeText(eventID)
   }
 
   render() {
-    const { errorInfo, eventID, error, component } = this.state
+    const { digest, componentStack, eventID, error, component } = this.state
     const { children } = this.props
-    if (errorInfo) {
+    if (digest || componentStack) {
       return (
         <ErrorComponent
           text='Quelque chose a mal tourné...'

@@ -1,8 +1,8 @@
 import React from 'react'
 
 type Props = {
-  className: string
-  viewBox: string
+  className?: string
+  viewBox?: string
 }
 
 const MicOff: React.FC<Props> = ({ className, viewBox = '0 0 24 24' }) => (

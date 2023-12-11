@@ -6,7 +6,7 @@ type Env = {
 
 const getEnv = (): Env => {
   const env = {
-    reCaptchaKey: process.env.REACT_APP_RECAPTCHA_CLIENT_SIDE!
+    reCaptchaKey: process.env.REACT_APP_RECAPTCHA_CLIENT_SIDE!,
   }
   for (const [key, value] of Object.entries(env)) {
     if (value === undefined) {

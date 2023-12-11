@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import styled from 'styled-components'
-// import RecordRTC from 'recordrtc'
 import { saveAs } from 'file-saver'
 import Mic from './Mic'
 import MicOff from './MicOff'
@@ -78,7 +77,7 @@ const handleSetRecorder = async ({
   try {
     if (stream && !recorder) {
       const RecordRTC = (await import('RecordRTC')).default
-      const nextRecorder = RecordRTC(stream.clone(), {
+      const nextRecorder = new RecordRTC(stream.clone(), {
         recorderType: RecordRTC.StereoAudioRecorder,
         mimeType: 'audio/wav',
         disableLogs: true,
@@ -119,7 +118,7 @@ const handleRecord = async ({
 
 function Main() {
   const [isRecording, setIsRecording] = React.useState(false)
-  const [recorder, setRecorder] = React.useState(null)
+  const [recorder, setRecorder] = React.useState(new RecordRTC())
   const [stream, setStream] = React.useState(null)
   const [error, setError] = React.useState(null)
   const recorderState = recorder && recorder.state
@@ -154,9 +153,9 @@ function Main() {
     }
   }, [isRecording, prevRecorderState, recorder, recorderState, isStreamActive])
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault()
-    evt.stopPropagation()
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
 
     // This is broken
     if (!stream) {

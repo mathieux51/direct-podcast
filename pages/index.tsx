@@ -6,7 +6,6 @@ import isServer from '../helpers/isServer'
 import packageJSON from '../package.json'
 
 if (!isServer) {
-
   if (process.env.NODE_ENV !== 'development') {
     Sentry.init({
       release: packageJSON.version,

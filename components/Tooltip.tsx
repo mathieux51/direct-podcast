@@ -21,7 +21,7 @@ const Right = styled.span`
 `
 
 type ContainerProps = {
-  isVisible: boolean
+  isVisible?: boolean
 }
 
 const Container = styled('div').withConfig({
@@ -57,8 +57,8 @@ const I = styled.i`
   `
 
 type Props = {
-  isVisible: boolean
-  className: string
+  isVisible?: boolean
+  className?: string
   children: JSX.Element
 }
 
