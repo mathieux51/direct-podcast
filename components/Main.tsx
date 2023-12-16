@@ -5,12 +5,9 @@ import Mic from './Mic'
 import MicOff from './MicOff'
 import Timer from './Timer'
 import Footer from './Footer'
-import usePrevious from '../hooks/usePrevious'
 import filename from '../helpers/filename'
 import type RecordRTC from 'recordrtc'
 import { toError } from '../helpers/errors'
-// import isServer from '../helpers/isServer'
-// import isServer from '../helpers/isServer'
 
 const Container = styled.div`
   height: 100vh;
@@ -47,19 +44,20 @@ const StyledMicOff = styled(MicOff)`
     fill: ${(props) => props.theme.white};
   }
 `
-const handleSetStream = async ({
+const handleStream = async ({
   setError,
   setStream,
 }: {
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>
   setStream: React.Dispatch<React.SetStateAction<MediaStream | undefined>>
-}) => {
+}): Promise<MediaStream | undefined> => {
   try {
     const userMediaStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: false,
     })
     setStream(userMediaStream)
+    return userMediaStream
   } catch (error) {
     setError(toError(error))
   }
@@ -84,7 +82,7 @@ const handleStopRecording = ({
   }
 }
 
-const handleSetRecorder = async ({
+const handleRecorder = async ({
   recorder,
   setRecorder,
   setError,
@@ -94,17 +92,17 @@ const handleSetRecorder = async ({
   setRecorder: React.Dispatch<React.SetStateAction<RecordRTC | undefined>>
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>
   stream: MediaStream | undefined
-}) => {
+}): Promise<RecordRTC | undefined> => {
   try {
-    if (stream && !recorder) {
+    if (typeof stream !== 'undefined' && typeof recorder === 'undefined') {
       const RecordRTC = (await import('recordrtc')).default
       const nextRecorder = new RecordRTC(stream.clone(), {
         recorderType: RecordRTC.StereoAudioRecorder,
         mimeType: 'audio/wav',
         disableLogs: true,
       })
-
       setRecorder(nextRecorder)
+      return nextRecorder
     }
   } catch (error) {
     setError(toError(error))
@@ -113,28 +111,28 @@ const handleSetRecorder = async ({
 
 const handleRecord = ({
   isRecording,
-  setIsRecording,
   recorder,
-  setRecorder,
-  isStreamActive,
   setError,
+  setIsRecording,
+  setRecorder,
+  stream,
 }: {
+  stream: MediaStream | undefined
   isRecording: boolean
-  setIsRecording: React.Dispatch<React.SetStateAction<boolean>>
   recorder: RecordRTC | undefined
-  setRecorder: React.Dispatch<React.SetStateAction<RecordRTC | undefined>>
-  isStreamActive: boolean
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>
+  setIsRecording: React.Dispatch<React.SetStateAction<boolean>>
+  setRecorder: React.Dispatch<React.SetStateAction<RecordRTC | undefined>>
 }) => {
   try {
-    if (!isRecording && recorder && isStreamActive) {
+    if (!isRecording && typeof recorder !== 'undefined' && stream?.active) {
       setIsRecording(true)
       recorder.startRecording()
       return
     }
 
     setIsRecording(false)
-    if (recorder) {
+    if (typeof recorder !== 'undefined') {
       recorder.stopRecording(() => {
         handleStopRecording({ recorder, setRecorder, setError })
       })
@@ -149,68 +147,55 @@ function Main() {
   const [recorder, setRecorder] = React.useState<RecordRTC>()
   const [stream, setStream] = React.useState<MediaStream>()
   const [error, setError] = React.useState<Error>()
-  // const recorderState = recorder.state
-  const prevRecorderState = usePrevious(recorder?.state)
-  const isStreamActive = Boolean(stream && stream.active)
 
-  // set the recorder if it doesn't exist or if it's stopped
-  React.useEffect(() => {
-    if (
-      typeof recorder == 'undefined' ||
-      (recorder.state !== 'stopped' &&
-        !(recorder.state === null && prevRecorderState === 'stopped'))
-    ) {
-      handleSetRecorder({
-        recorder,
-        setRecorder,
-        setError,
-        stream,
-      })
-    }
-  }, [recorder, isRecording, stream, recorder?.state, prevRecorderState])
-
-  React.useEffect(() => {
-    if (recorder?.state === 'inactive' && prevRecorderState === null) {
-      handleRecord({
-        isRecording,
-        setIsRecording,
-        recorder,
-        setRecorder,
-        isStreamActive,
-        setError,
-      })
-    }
-  }, [
-    isRecording,
-    prevRecorderState,
-    recorder,
-    recorder?.state,
-    isStreamActive,
-  ])
-
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     event.stopPropagation()
 
-    // This is broken
-    if (!stream) {
-      handleSetStream({ setStream, setError })
+    // set stream the first time the user clicks or record button
+    if (typeof stream === 'undefined') {
+      const nextStream = await handleStream({ setStream, setError })
+      const nextRecorder = await handleRecorder({
+        recorder,
+        setError,
+        setRecorder,
+        stream: nextStream,
+      })
+      handleRecord({
+        isRecording,
+        recorder: nextRecorder,
+        setError,
+        setIsRecording,
+        setRecorder,
+        stream: nextStream
+      })
+      return
+    }
+    if (typeof recorder === 'undefined') {
+      const nextRecorder = await handleRecorder({
+        recorder,
+        setError,
+        setRecorder,
+        stream,
+      })
+      handleRecord({
+        isRecording,
+        recorder: nextRecorder,
+        setError,
+        setIsRecording,
+        setRecorder,
+        stream
+      })
       return
     }
 
-    handleSetRecorder({
-      recorder,
-      setRecorder,
-      setError,
-      stream,
-    })
     handleRecord({
       isRecording,
-      setIsRecording,
       recorder,
-      setRecorder,
-      isStreamActive,
       setError,
+      setIsRecording,
+      setRecorder,
+      stream
     })
   }
 
