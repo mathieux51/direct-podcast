@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
 import CommonCreative from './CommonCreative'
 import Help from './Help'
 import Mail from './Mail'
@@ -71,13 +70,6 @@ const Footer: React.FC<Props> = ({ className }) => {
   }
 
   useClickOutside(buttonRef, () => setIsVisible(false))
-  const [email, setEmail] = React.useState('')
-  const handleOnVerify = React.useCallback((token: string) => {
-    if (token) {
-      setEmail('estceque.asso@gmail.com')
-    }
-  }, [])
-
   return (
     <Container className={className}>
       <SubContainer>
@@ -87,9 +79,8 @@ const Footer: React.FC<Props> = ({ className }) => {
           </Button>
         </Tooltip>
         <CommonCreative />
-        <GoogleReCaptcha onVerify={handleOnVerify} />
         <a
-          href={`mailto:${email}?Subject=directpodcast.fr v${packageJSON.version}`}
+          href={`mailto:estceque.asso@gmail.com?Subject=directpodcast.fr v${packageJSON.version}`}
           aria-label='courriel'
         >
           <StyledMail />

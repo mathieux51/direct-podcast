@@ -15,13 +15,9 @@ jobs:
           NOW_ORG_ID: ${{ secrets.NOW_ORG_ID }}
           NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
-          REACT_APP_RECAPTCHA_CLIENT_SIDE: ${{ secrets.REACT_APP_RECAPTCHA_CLIENT_SIDE }}
-          REACT_APP_RECAPTCHA_SERVER_SIDE: ${{ secrets.REACT_APP_RECAPTCHA_SERVER_SIDE }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           ALIAS: "directpodcast.fr"
           PROJECT_NAME: "directpodcast"
-          RECAPTCHA_CLIENT_SIDE: ${{ secrets.RECAPTCHA_CLIENT_SIDE }}
-          RECAPTCHA_SERVER_SIDE: ${{ secrets.RECAPTCHA_SERVER_SIDE }}
         run: npm run deploy
       - name: Run Lighthouse
         uses: foo-software/lighthouse-check-action@master

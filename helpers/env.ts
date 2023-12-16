@@ -1,13 +1,9 @@
 import { EnvError } from '../helpers/errors'
 
-type Env = {
-  reCaptchaKey: string
-}
+type Env = {}
 
 const getEnv = (): Env => {
-  const env = {
-    reCaptchaKey: process.env.REACT_APP_RECAPTCHA_CLIENT_SIDE!,
-  }
+  const env = {}
   for (const [key, value] of Object.entries(env)) {
     if (value === undefined) {
       throw new EnvError(`${key} is required`)
