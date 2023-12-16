@@ -7,7 +7,7 @@ import Timer from './Timer'
 import Footer from './Footer'
 import usePrevious from '../hooks/usePrevious'
 import filename from '../helpers/filename'
-import RecordRTC from 'recordrtc'
+import type RecordRTC from 'recordrtc'
 import { toError } from '../helpers/errors'
 // import isServer from '../helpers/isServer'
 // import isServer from '../helpers/isServer'
@@ -97,6 +97,7 @@ const handleSetRecorder = async ({
 }) => {
   try {
     if (stream && !recorder) {
+      const RecordRTC = (await import('recordrtc')).default
       const nextRecorder = new RecordRTC(stream.clone(), {
         recorderType: RecordRTC.StereoAudioRecorder,
         mimeType: 'audio/wav',
