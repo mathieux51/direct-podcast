@@ -3,7 +3,7 @@
     "node": "18.x"
   },
   "name": "direct-podcast",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -42,6 +42,7 @@
     "@ffmpeg/ffmpeg": "^0.12.9",
     "@ffmpeg/types": "^0.12.2",
     "@ffmpeg/util": "^0.12.1",
+    "@sentry/cli": "^2.23.0",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20.10.4",
     "@types/react": "^18.2.42",
