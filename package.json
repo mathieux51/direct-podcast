@@ -7,7 +7,7 @@
     "build": "next build && ./scripts/sentry.js",
     "export": "next export",
     "start": "next start",
-    "deploy": "./ scripts/deploy.sh",
+    "deploy": "./scripts/deploy.sh",
     "analyse": "ANALYZE=true npm run build",
     "lint": "eslint --ext .jsx,.js,.ts,.tsx,.json --fix ."
   },
