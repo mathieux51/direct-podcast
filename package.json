@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && ./scripts/sentry.js",
+    "build": "next build && node ./scripts/sentry.js",
     "export": "next export",
     "start": "next start",
     "deploy": "./scripts/deploy.sh",
