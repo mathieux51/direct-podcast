@@ -9,7 +9,7 @@ const filename = () => {
   const min = addZero(now.getMinutes().toString())
   const s = addZero(now.getSeconds().toString())
 
-  return `${d}.${m}.${y}-${h}.${min}.${s}.wav`
+  return `${d}.${m}.${y}-${h}.${min}.${s}`
 }
 
 export default filename

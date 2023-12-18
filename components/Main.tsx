@@ -5,15 +5,18 @@ import Mic from './Mic'
 import MicOff from './MicOff'
 import Timer from './Timer'
 import Footer from './Footer'
+import Header from './Header'
 import filename from '../helpers/filename'
 import type RecordRTC from 'recordrtc'
 import { toError } from '../helpers/errors'
+import packageJSON from '../package.json'
 
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
   background: ${(props) => props.theme.blue};
   flex-direction: column;
+  display: flex;
 `
 const Button = styled.button`
   width: 12rem;
@@ -21,8 +24,15 @@ const Button = styled.button`
   cursor: pointer;
 `
 
+const StyledHeader = styled(Header)`
+  height: 70px;
+  padding-top: 1rem;
+  padding-right: 1rem;
+`
+
 const Form = styled.form`
-  height: 80%;
+  height: auto;
+  margin: auto 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,7 +40,8 @@ const Form = styled.form`
 `
 
 const StyledFooter = styled(Footer)`
-  height: 20%;
+  height: 92px;
+  padding-bottom: 1rem;
 `
 
 const StyledMic = styled(Mic)`
@@ -63,18 +74,51 @@ const handleStream = async ({
   }
 }
 
-const handleStopRecording = ({
+const handleStopRecording = async ({
+  useMp3,
   recorder,
   setRecorder,
   setError,
 }: {
+  useMp3: boolean
   recorder: RecordRTC
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>
   setRecorder: React.Dispatch<React.SetStateAction<RecordRTC | undefined>>
 }) => {
   try {
     const blob = recorder.getBlob()
-    saveAs(blob, filename())
+    if (useMp3) {
+      const { FFmpeg } = await import('@ffmpeg/ffmpeg')
+      const { toBlobURL } = await import('@ffmpeg/util')
+      const ffmpeg = new FFmpeg()
+      const version = packageJSON.devDependencies['@ffmpeg/core'].replace(
+        '^',
+        '',
+      )
+      const baseURL = `https://unpkg.com/@ffmpeg/core@${version}/dist/umd`
+      await ffmpeg.load({
+        coreURL: await toBlobURL(
+          `${baseURL}/ffmpeg-core.js`,
+          'text/javascript',
+        ),
+        wasmURL: await toBlobURL(
+          `${baseURL}/ffmpeg-core.wasm`,
+          'application/wasm',
+        ),
+      })
+
+      const fName = filename()
+      const wav = `${fName}.wav`
+      const mp3 = `${fName}.mp3`
+      const arrayBuffer = await blob.arrayBuffer()
+      const uint8Array = new Uint8Array(arrayBuffer)
+      await ffmpeg.writeFile(wav, uint8Array)
+      await ffmpeg.exec(['-i', wav, mp3])
+      const file = await ffmpeg.readFile(mp3)
+      saveAs(new Blob([file]), mp3)
+    } else {
+      saveAs(blob, `${filename()}.wav`)
+    }
     recorder.destroy()
     setRecorder(undefined)
   } catch (error) {
@@ -116,6 +160,7 @@ const handleRecord = ({
   setIsRecording,
   setRecorder,
   stream,
+  useMp3,
 }: {
   stream: MediaStream | undefined
   isRecording: boolean
@@ -123,6 +168,7 @@ const handleRecord = ({
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>
   setIsRecording: React.Dispatch<React.SetStateAction<boolean>>
   setRecorder: React.Dispatch<React.SetStateAction<RecordRTC | undefined>>
+  useMp3: boolean
 }) => {
   try {
     if (!isRecording && typeof recorder !== 'undefined' && stream?.active) {
@@ -134,7 +180,7 @@ const handleRecord = ({
     setIsRecording(false)
     if (typeof recorder !== 'undefined') {
       recorder.stopRecording(() => {
-        handleStopRecording({ recorder, setRecorder, setError })
+        handleStopRecording({ recorder, setRecorder, setError, useMp3 })
       })
     }
   } catch (error) {
@@ -147,6 +193,8 @@ function Main() {
   const [recorder, setRecorder] = React.useState<RecordRTC>()
   const [stream, setStream] = React.useState<MediaStream>()
   const [error, setError] = React.useState<Error>()
+
+  const [useMp3, setUseMp3] = React.useState<boolean>(false) // either 'audio/wav' or 'audio/mpeg' (MP3)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -167,7 +215,8 @@ function Main() {
         setError,
         setIsRecording,
         setRecorder,
-        stream: nextStream
+        stream: nextStream,
+        useMp3,
       })
       return
     }
@@ -184,7 +233,8 @@ function Main() {
         setError,
         setIsRecording,
         setRecorder,
-        stream
+        stream,
+        useMp3,
       })
       return
     }
@@ -195,8 +245,14 @@ function Main() {
       setError,
       setIsRecording,
       setRecorder,
-      stream
+      stream,
+      useMp3,
     })
+  }
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setUseMp3((prevUseMp3) => !prevUseMp3)
   }
 
   if (error) {
@@ -205,6 +261,7 @@ function Main() {
 
   return (
     <Container>
+      <StyledHeader onChange={handleChange} />
       <Form onSubmit={handleSubmit}>
         <Button type='submit' aria-label='enregistrer'>
           {isRecording ? <StyledMic /> : <StyledMicOff />}

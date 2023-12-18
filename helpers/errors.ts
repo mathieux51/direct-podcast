@@ -1,5 +1,6 @@
 export class GetUserMediaError extends Error {}
 export class EnvError extends Error {}
+export class UnsupportedMimeTypeError extends Error {}
 
 export const isErrorWithMessage = (error: unknown): error is Error =>
   typeof error === 'object' &&
