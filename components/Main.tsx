@@ -193,7 +193,6 @@ function Main() {
   const [recorder, setRecorder] = React.useState<RecordRTC>()
   const [stream, setStream] = React.useState<MediaStream>()
   const [error, setError] = React.useState<Error>()
-
   const [useMp3, setUseMp3] = React.useState<boolean>(false) // either 'audio/wav' or 'audio/mpeg' (MP3)
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -249,9 +248,9 @@ function Main() {
       useMp3,
     })
   }
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
-    event.stopPropagation()
+  const handleChange = (_: React.ChangeEvent<HTMLInputElement>) => {
+    // event.preventDefault()
+    // event.stopPropagation()
     setUseMp3((prevUseMp3) => !prevUseMp3)
   }
 
@@ -259,6 +258,7 @@ function Main() {
     throw error
   }
 
+  console.log(useMp3)
   return (
     <Container>
       <StyledHeader onChange={handleChange} />

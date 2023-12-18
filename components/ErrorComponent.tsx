@@ -65,7 +65,6 @@ const Bubble = styled(Text)`
   margin-bottom: 1rem;
   max-width: 500px;
   font-weight: normal;
-
   color: ${(props) => props.theme.white};
   background: ${(props) => props.theme.blue};
   border-radius: 1rem;
@@ -74,7 +73,6 @@ const Bubble = styled(Text)`
   transition: opacity 0.8s;
   padding: 1rem;
   position: relative;
-
   &::before {
     content: '';
     position: absolute;
