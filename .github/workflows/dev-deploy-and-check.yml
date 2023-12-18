@@ -16,7 +16,7 @@ jobs:
           NOW_PROJECT_ID: ${{ secrets.NOW_PROJECT_ID }}
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          ALIAS: "directpodcast.fr"
+          ALIAS: "dev.directpodcast.fr"
           PROJECT_NAME: "directpodcast"
         run: npm run deploy
       - name: Run Lighthouse
