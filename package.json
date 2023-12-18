@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": "20.x"
+  },
   "name": "direct-podcast",
   "version": "1.0.25",
   "private": true,
