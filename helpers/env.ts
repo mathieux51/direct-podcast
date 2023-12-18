@@ -1,8 +1,6 @@
 import { EnvError } from '../helpers/errors'
 
-type Env = {}
-
-const getEnv = (): Env => {
+const getEnv = () => {
   const env = {}
   for (const [key, value] of Object.entries(env)) {
     if (value === undefined) {

@@ -254,7 +254,6 @@ function Main() {
     throw error
   }
 
-  console.log(useMp3)
   return (
     <Container>
       <StyledHeader onChange={handleChange} />
