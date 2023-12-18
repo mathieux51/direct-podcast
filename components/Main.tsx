@@ -248,11 +248,7 @@ function Main() {
       useMp3,
     })
   }
-  const handleChange = (_: React.ChangeEvent<HTMLInputElement>) => {
-    // event.preventDefault()
-    // event.stopPropagation()
-    setUseMp3((prevUseMp3) => !prevUseMp3)
-  }
+  const handleChange = () => setUseMp3((prevUseMp3) => !prevUseMp3)
 
   if (error) {
     throw error
