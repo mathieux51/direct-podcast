@@ -88,34 +88,41 @@ const handleStopRecording = async ({
   try {
     const blob = recorder.getBlob()
     if (useMp3) {
-      const { FFmpeg } = await import('@ffmpeg/ffmpeg')
-      const { toBlobURL } = await import('@ffmpeg/util')
-      const ffmpeg = new FFmpeg()
-      const version = packageJSON.devDependencies['@ffmpeg/core'].replace(
-        '^',
-        '',
-      )
-      const baseURL = `https://unpkg.com/@ffmpeg/core@${version}/dist/umd`
-      await ffmpeg.load({
-        coreURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.js`,
-          'text/javascript',
-        ),
-        wasmURL: await toBlobURL(
-          `${baseURL}/ffmpeg-core.wasm`,
-          'application/wasm',
-        ),
-      })
+      try {
+        const {FFmpeg} = await import('@ffmpeg/ffmpeg')
+        const {toBlobURL} = await import('@ffmpeg/util')
+        const ffmpeg = new FFmpeg()
+        const version = packageJSON.devDependencies['@ffmpeg/core'].replace(
+          '^',
+          '',
+        )
+        const baseURL = `https://unpkg.com/@ffmpeg/core@${version}/dist/umd`
+        await ffmpeg.load({
+          coreURL: await toBlobURL(
+            `${baseURL}/ffmpeg-core.js`,
+            'text/javascript',
+          ),
+          wasmURL: await toBlobURL(
+            `${baseURL}/ffmpeg-core.wasm`,
+            'application/wasm',
+          ),
+        })
 
-      const fName = filename()
-      const wav = `${fName}.wav`
-      const mp3 = `${fName}.mp3`
-      const arrayBuffer = await blob.arrayBuffer()
-      const uint8Array = new Uint8Array(arrayBuffer)
-      await ffmpeg.writeFile(wav, uint8Array)
-      await ffmpeg.exec(['-i', wav, mp3])
-      const file = await ffmpeg.readFile(mp3)
-      saveAs(new Blob([file]), mp3)
+        const fName = filename()
+        const wav = `${fName}.wav`
+        const mp3 = `${fName}.mp3`
+        const arrayBuffer = await blob.arrayBuffer()
+        const uint8Array = new Uint8Array(arrayBuffer)
+        await ffmpeg.writeFile(wav, uint8Array)
+        await ffmpeg.exec(['-i', wav, mp3])
+        const file = await ffmpeg.readFile(mp3)
+        saveAs(new Blob([file]), mp3)
+      }  catch (mp3Error) {
+        // save as wav
+        // failed to convert to mp3
+        // saveAs(blob, `${filename()}.wav`)
+
+        }
     } else {
       saveAs(blob, `${filename()}.wav`)
     }
