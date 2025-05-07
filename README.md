@@ -17,9 +17,6 @@ npm start
 ```bash
 git checkout -b dev
 git push -u origin dev
-
-# ...
-
 gh pr create
 npx release-it
 gh pr merge
